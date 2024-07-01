@@ -29,7 +29,12 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo snap install snapcraft --classic
+          sudo apt-get install -y gnome-keyring
           chmod +x node_modules/app-builder-bin/linux/x64/app-builder
+          echo -e "[user]\ndefault-keyring=login.keyring" > ~/.gnome2/keyrings/default
+          mkdir -p ~/.local/share/keyrings
+          echo -n "password" | gnome-keyring-daemon --login
+          chmod 600 ~/.local/share/keyrings/*
 
       - name: build-linux
         if: matrix.os == 'ubuntu-latest'
