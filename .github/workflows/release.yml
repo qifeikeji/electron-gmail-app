@@ -38,7 +38,9 @@ jobs:
 
       - name: build-linux
         if: matrix.os == 'ubuntu-latest'
-        run: npm run build:linux -- --verbose
+        run: |
+          export ELECTRON_BUILDER_LOGGING=1
+          npm run build:linux
 
       - name: build-mac
         if: matrix.os == 'macos-latest'
