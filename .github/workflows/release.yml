@@ -25,16 +25,20 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Setup for Linux build
+      - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
+          sudo apt-get update
+          sudo apt-get install -y snapd libarchive-tools
           sudo snap install snapcraft --classic
-          chmod +x node_modules/app-builder-bin/linux/x64/app-builder
+
+      - name: Set permissions for app-builder
+        if: matrix.os == 'ubuntu-latest'
+        run: chmod +x node_modules/app-builder-bin/linux/x64/app-builder
 
       - name: build-linux
         if: matrix.os == 'ubuntu-latest'
-        run: |
-          npm run build:linux -- --dangerous
+        run: npm run build:linux -- --verbose
 
       - name: build-mac
         if: matrix.os == 'macos-latest'
