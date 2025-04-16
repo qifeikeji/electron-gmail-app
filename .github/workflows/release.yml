@@ -1,9 +1,12 @@
 name: Build/release Electron app
 
 on:
-  push:
-    tags:
-      - v*.*.*
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag for the release (e.g., v1.0.0)'
+        required: false
+        default: ''
 
 jobs:
   release:
@@ -79,6 +82,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           draft: true
+          tag_name: ${{ github.event.inputs.version || format('manual-release-{0}', github.run_id) }}
           files: |
             dist/*.exe
             dist/*.zip
