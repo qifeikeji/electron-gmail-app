@@ -51,7 +51,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y snapd libarchive-tools
+          sudo apt-get install -y snapd libarchive-tools dpkg rpm fakeroot
           sudo snap install snapcraft --classic
 
       - name: Set permissions for app-builder
@@ -60,8 +60,11 @@ jobs:
 
       - name: build-linux
         if: matrix.os == 'ubuntu-latest'
+        timeout-minutes: 30
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ELECTRON_BUILDER_LOG_LEVEL: debug
+          ELECTRON_MIRROR: https://github.com/electron/electron/releases/download/
         run: |
           export ELECTRON_BUILDER_LOGGING=1
           pnpm run build:linux
